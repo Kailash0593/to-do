@@ -23,7 +23,7 @@ export const CreateUserForm = ({ onFormSubmit }: {
     console.log("CreateUserForm - re-rendered!")
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col justify-center items-center w-full '>
+        <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col justify-center items-center w-full'>
             <TextField label='Enter name' {...register("user", {
                 required: {
                     value: true,
@@ -33,7 +33,7 @@ export const CreateUserForm = ({ onFormSubmit }: {
                     value: /^(?=.{3,15}$)[A-Za-z]+(?: [A-Za-z]+)?$/i,
                     message: "Only letters allowed (3–15 chars) with at most one space."
                 }
-            })} className='w-full max-w-2xs' />
+            })} className='w-full max-w-2xs bg-white' />
             {errors.user && <span>{errors.user.message}</span>}
             <div className='mt-4'>
                 <Button type="submit" variant="contained">lets Go!</Button>
