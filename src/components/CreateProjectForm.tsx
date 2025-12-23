@@ -30,8 +30,12 @@ export const CreateProjectForm = ({ onFormSubmit }: {
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <input type="text" placeholder='Enter name' {...register("title", {
+                required: {
+                    value: true,
+                    message: "Must be 3–15 characters long and contain only letters, numbers, spaces, -, _"
+                },
                 pattern: {
-                    value: /^[A-Za-z0-9_-]+(?: [A-Za-z0-9_-]+)*$/i,
+                    value: /^(?=.{3,15}$)[A-Za-z0-9_-]+(?: [A-Za-z0-9_-]+)*$/i,
                     message: "Must be 3–15 characters long and contain only letters, numbers, spaces, -, _"
                 }
             })} />

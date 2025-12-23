@@ -18,6 +18,7 @@ interface ProjectI {
 interface CategoryI {
     id: string;
     userId: string;
+    projectId: string;
     title: string;
     createdDate: number;
 }
@@ -25,10 +26,10 @@ interface CategoryI {
 interface TaskI {
     id: string;
     title: string;
-    description: string;
     createdDate: number;
-    projectId: number;
-    categoryId?: number;
+    projectId: string;
+    description?: string;
+    categoryId?: string;
 }
 
 interface UserFormFieldsI {

@@ -3,6 +3,7 @@ import { useProject } from '../core/contexts/ProjectContext'
 import { CreateProjectForm } from './CreateProjectForm';
 import type { ProjectI } from '../core/interface';
 import useCRUDProject from '../core/hooks/useCRUDProject';
+import { Tasks } from './Tasks';
 
 export const Project = () => {
     const { project, setProject } = useProject();
@@ -25,7 +26,8 @@ export const Project = () => {
     }else{
         projectNode = (
             <>
-                Welcome, to your <b>{project.title}</b> project!
+                <h1>Welcome, to your <b>{project.title}</b> project!</h1>
+                <Tasks />
             </>
         )
     }

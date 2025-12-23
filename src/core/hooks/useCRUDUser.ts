@@ -6,7 +6,7 @@ const useCRUDUser = (type: Action, user?: UserI) => {
     switch (type) {
         case "create":
             if(user){
-                storage.users = [user];
+                storage.users = [...storage.users ? storage.users : [], user];
             }
             break;
         case "update":

@@ -6,7 +6,7 @@ const useCRUDProject = (type: Action, project?: ProjectI) => {
     switch (type) {
         case "create":
             if(project){
-                storage.projects = [project];
+                storage.projects = [...storage.projects ? storage.projects : [],  project];
             }
             break;
         case "update":

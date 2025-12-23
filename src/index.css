@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+body {
+    height: 100vh;
+}
+
+#root {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+@layer components {
+    .app-container {
+        @apply container mx-auto bg-sky-100 h-full max-w-md max-h-192 m-auto;
+    }
+}

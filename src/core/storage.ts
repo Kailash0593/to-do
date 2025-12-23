@@ -77,13 +77,10 @@ class Storage {
         return undefined;
     }
 
-    set tasks(task: TaskI [] | undefined) {
-        const data = localStorage.getItem("tasks");
-        if (data && task) {
-            const newTaks = [...JSON.parse(data), task];
-            localStorage.setItem("categorys", JSON.stringify(newTaks));
-        } else {
-            localStorage.setItem("categorys", JSON.stringify(task));
+    set tasks(tasks: TaskI [] | undefined) {
+        if (tasks) {
+            const newTaks = JSON.stringify(tasks && tasks.length>0 ? tasks : []) ;
+            localStorage.setItem("tasks", newTaks);
         }
     }
 }
