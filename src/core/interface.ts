@@ -13,6 +13,7 @@ interface ProjectI {
     title: string;
     isActive: boolean;
     createdDate: number;
+    description?: string;
 }
 
 interface CategoryI {

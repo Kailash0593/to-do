@@ -14,6 +14,12 @@ body {
 
 @layer components {
     .app-container {
-        @apply container mx-auto bg-sky-100 h-full max-w-md max-h-192 m-auto;
+        @apply container mx-auto bg-sky-100 h-full max-w-md max-h-192 m-auto relative overflow-hidden;
+    }
+    .app-drawer {
+        @apply max-w-md m-auto;
+    }
+    .app-drawer-content{
+        @apply bg-gray-100 h-full rounded-tr-md rounded-tl-lg;
     }
 }

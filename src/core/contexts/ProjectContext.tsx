@@ -6,22 +6,29 @@ import { useUser } from "./UserContext";
 const ProjectContext = createContext<{
     project: ProjectI | undefined;
     setProject: React.Dispatch<React.SetStateAction<ProjectI | undefined>>
+    projects: ProjectI [];
+    setProjects: React.Dispatch<React.SetStateAction<ProjectI []>>
 } | undefined>(undefined);
 
 
 const ProjectProvider = ({ children }: { children?: React.ReactNode }) => {
     const { user } = useUser();
     let userProject!: ProjectI | undefined;
+    let userProjects: ProjectI [] = [];
 
     if (user?.id) {
         userProject = storage.projects?.find(project => project.userId === user.id);
+        userProjects = storage.projects?.filter(project => project.userId === user.id) || [];
     }
 
     const [project, setProject] = useState<ProjectI | undefined>(userProject);
+    const [projects, setProjects] = useState<ProjectI []>(userProjects);
 
     const value = {
         project,
-        setProject
+        setProject,
+        projects,
+        setProjects
     }
 
     return (

@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState } from "react";
-import { useUser } from "./UserContext";
 import { useProject } from "./ProjectContext";
 import { storage } from "../storage";
 import type { TaskI } from "../interface";

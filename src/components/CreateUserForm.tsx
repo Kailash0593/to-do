@@ -1,4 +1,3 @@
-import React from 'react';
 import { useForm, type SubmitHandler } from "react-hook-form"
 import type { UserFormFieldsI, UserI } from '../core/interface';
 import { useRandomId } from '../core/hooks/useRandomId';

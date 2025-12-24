@@ -23,13 +23,10 @@ class Storage {
         return undefined;
     }
 
-    set users(user: UserI [] | undefined) {
-        const data = localStorage.getItem("users");
-        if (data && user) {
-            const newUsers = [...JSON.parse(data), user];
-            localStorage.setItem("users", JSON.stringify(newUsers));
-        } else {
-            localStorage.setItem("users", JSON.stringify(user));
+    set users(users: UserI [] | undefined) {
+        if (users) {
+            const newUsers = JSON.stringify(users && users.length>0 ? users : []) ;
+            localStorage.setItem("users", newUsers);
         }
     }
 
@@ -41,13 +38,10 @@ class Storage {
         return undefined;
     }
 
-    set projects(project: ProjectI [] | undefined) {
-        const data = localStorage.getItem("projects");
-        if (data && project) {
-            const newProjects = [...JSON.parse(data), project];
-            localStorage.setItem("projects", JSON.stringify(newProjects));
-        } else {
-            localStorage.setItem("projects", JSON.stringify(project));
+    set projects(projects: ProjectI [] | undefined) {
+        if (projects) {
+            const newProjects = JSON.stringify(projects && projects.length>0 ? projects : []) ;
+            localStorage.setItem("projects", newProjects);
         }
     }
 
@@ -59,13 +53,10 @@ class Storage {
         return undefined;
     }
 
-    set categorys(category: CategoryI [] | undefined) {
-        const data = localStorage.getItem("categorys");
-        if (data && category) {
-            const newCategorys = [...JSON.parse(data), category];
-            localStorage.setItem("categorys", JSON.stringify(newCategorys));
-        } else {
-            localStorage.setItem("categorys", JSON.stringify(category));
+    set categorys(categories: CategoryI [] | undefined) {
+        if (categories) {
+            const newCategories = JSON.stringify(categories && categories.length>0 ? categories : []) ;
+            localStorage.setItem("categorys", newCategories);
         }
     }
 

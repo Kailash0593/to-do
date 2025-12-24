@@ -4,7 +4,6 @@ import { CreateUserForm } from './CreateUserForm';
 import type { UserI } from '../core/interface';
 import useCRUDUser from '../core/hooks/useCRUDUser';
 import { Dashboard } from './Dashboard';
-import { Button } from '@mui/material';
 import ToDoBgImage from './../assets/to-do-bg.svg';
 
 export const Welcome = () => {
