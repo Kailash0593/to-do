@@ -1,38 +1,74 @@
-import React, { useRef } from 'react'
-import { useProject } from '../core/contexts/ProjectContext'
-import { CreateProjectForm, type CreateProjectFormInputHandle } from './CreateProjectForm';
-import type { ProjectI } from '../core/interface';
-import useCRUDProject from '../core/hooks/useCRUDProject';
-// import { Tasks } from './Tasks';
+import React, { useEffect, useRef, useState } from 'react'
+import { useProject } from '../../core/contexts/ProjectContext'
+import { ProjectForm, type ProjectFormInputHandle } from './ProjectForm';
+import type { ProjectI } from '../../core/interface';
+import useCRUDProject from '../../core/hooks/useCRUDProject';
 import { AppBar, Button, Fab, IconButton, Toolbar } from '@mui/material';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Typography from '@mui/material/Typography';
-import { useUser } from '../core/contexts/UserContext';
-import NoProjectBgImage from './../assets/no-project-bg.svg';
-import { SwipeDrawer, type SwipeDrawerCustomInputHandle } from './SwipeDrawer';
+import { useUser } from '../../core/contexts/UserContext';
+import NoProjectBgImage from './../../assets/no-project-bg.svg';
+import { SwipeDrawer, type SwipeDrawerCustomInputHandle } from '../SwipeDrawer';
 import { ProjectCard } from './ProjectCard';
 import AddIcon from '@mui/icons-material/Add';
-
+import { CommonAlertDialog, type AlertDialogCustomInputHandle } from '../CommonDialog';
 
 export const Project = () => {
+    const [ isSelected, setIsSelected ] = useState('');
+    const [ isEditable, setIsEditable ] = useState(false);
     const { user } = useUser();
-    const { project, projects } = useProject();
+    const { projects, setProject } = useProject();
     const crudProject = useCRUDProject();
     const swipeableDrawerRef = useRef<SwipeDrawerCustomInputHandle>(null);
-    const createProjectRef = useRef<CreateProjectFormInputHandle>(null);
+    const createProjectRef = useRef<ProjectFormInputHandle>(null);
+    const commonDialogRef = useRef<AlertDialogCustomInputHandle>(null);
 
     let projectNode: React.ReactNode;
 
+    useEffect(() => {
+        console.log("projects", projects)
+        const projectId = projects.find(p => p.isActive)?.id;
+        console.log("projectId", projectId)
+        setIsSelected(projectId || '');
+    }, [])
+
     const onFormSubmit = (project: ProjectI) => {
-        console.log("project", project)
-        crudProject.create(project);
+        isEditable ? crudProject.update(project) : crudProject.create(project);
         swipeableDrawerRef.current?.toggleDrawer(false);
         createProjectRef.current?.resetFrom();
+        console.log("project", project)
     }
 
     const handleNewProject = () => {
-        console.log("toggleDrawer", swipeableDrawerRef.current)
+        setIsEditable(false);
+        createProjectRef.current?.setProject(undefined);
         swipeableDrawerRef.current?.toggleDrawer(true);
+        console.log("toggleDrawer", swipeableDrawerRef.current)
+    }
+
+    const onCardClick = (_project: ProjectI) => {
+        setIsSelected(_project.id);
+        crudProject.selectProject(_project);
+        console.log("_project", _project);
+        console.log("onCardClick");
+    }
+
+    const onDeleteClick = (project: ProjectI) => {
+        commonDialogRef.current?.setTitle("Delete project");
+        commonDialogRef.current?.setDescription(`Are you sure you want to delete ${project.title} project ?`);
+        commonDialogRef.current?.confirm().then(() => {
+            crudProject.remove(project.id);
+        });
+        commonDialogRef.current?.open();
+        console.log("onDeleteClick");
+    }
+
+    const onEditClick = (project: ProjectI) => {
+        setIsEditable(true);
+        swipeableDrawerRef.current?.toggleDrawer(true);
+        console.log("project", project)
+        createProjectRef.current?.setProject(project);
+        console.log("onEditClick");
     }
 
     if (projects.length === 0) {
@@ -52,7 +88,14 @@ export const Project = () => {
                     <div className='all-project-container max-h-[calc(100vh-130px)] overflow-y-auto'>
                         {
                             projects.map(p => (
-                                <ProjectCard key={p.id} project={p} ></ProjectCard>
+                                <ProjectCard 
+                                    key={p.id} 
+                                    project={p} 
+                                    onCardClick={() => onCardClick(p)} 
+                                    onDeleteClick={onDeleteClick}
+                                    onEditClick={onEditClick}
+                                    isSelected={isSelected}
+                                ></ProjectCard>
                             ))
                         }
                     </div>
@@ -88,9 +131,17 @@ export const Project = () => {
             <div>
                 {projectNode}
                 <SwipeDrawer ref={swipeableDrawerRef} >
-                    <CreateProjectForm ref={createProjectRef} onFormSubmit={onFormSubmit} ></CreateProjectForm>
+                    <ProjectForm 
+                        ref={createProjectRef} 
+                        onFormSubmit={onFormSubmit}
+                        isEditable={isEditable}
+                    >
+                    </ProjectForm>
                 </SwipeDrawer>
             </div>
+            <CommonAlertDialog
+                ref={commonDialogRef}
+            ></CommonAlertDialog>
         </>
     )
 }

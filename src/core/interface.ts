@@ -29,6 +29,7 @@ interface TaskI {
     title: string;
     createdDate: number;
     projectId: string;
+    isCompleted: boolean;
     description?: string;
     categoryId?: string;
 }

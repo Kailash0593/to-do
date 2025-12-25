@@ -1,5 +1,5 @@
 import { Global } from "@emotion/react";
-import { Box, CssBaseline, Skeleton, styled, SwipeableDrawer, Typography } from "@mui/material"
+import { CssBaseline, styled, SwipeableDrawer } from "@mui/material"
 import { grey } from "@mui/material/colors";
 import { forwardRef, useImperativeHandle, useState, type ReactNode } from "react";
 

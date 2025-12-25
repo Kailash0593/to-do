@@ -4,20 +4,23 @@ import { storage } from "../storage";
 import type { TaskI } from "../interface";
 
 const TasksContext = createContext<{
-    tasks: TaskI[] | undefined,
-    setTasks: React.Dispatch<React.SetStateAction<TaskI[] | undefined>>
+    tasks: TaskI[],
+    setTasks: React.Dispatch<React.SetStateAction<TaskI[]>>
 } | undefined>(undefined);
 
 const TasksProvider = ({ children }: { children: React.ReactNode }) => {
     const { project } = useProject();
+    console.log("project", project)
 
-    let projectTasks: TaskI[] | undefined;
+    let projectTasks: TaskI[] = [];
 
-    if (project && storage.tasks) {
-        projectTasks = storage.tasks.filter(task => task.projectId === project.id);
+    if (project) {
+        projectTasks = storage.tasks?.filter(task => task.projectId === project.id) || [];
     }
 
-    const [tasks, setTasks] = useState<TaskI[] | undefined>(projectTasks);
+    console.log("projectTasks", projectTasks);
+
+    const [tasks, setTasks] = useState<TaskI[]>(projectTasks);
 
     const value = {
         tasks,

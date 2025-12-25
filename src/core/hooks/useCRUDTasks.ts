@@ -1,40 +1,41 @@
+import { useTasks } from "../contexts/TasksContex";
 import type { TaskI } from "../interface";
 import { storage } from "../storage";
-import type { Action } from "../type";
 
-const useCRUDTasks = (type: Action, task?: TaskI) => {
-    switch (type) {
-        case "create":
-            if(task){
-                const allTasks = !storage.tasks ? [] : storage.tasks;
-                storage.tasks = [...allTasks, task];
-            }
-            break;
-        case "update":
-            if(task && storage.tasks){ 
-                const { id } = task; 
-                const currentTaskIndex = storage.tasks.findIndex(t => t.id===id);
-                if(currentTaskIndex){
-                    storage.tasks[currentTaskIndex] = {
-                        ...storage.tasks[currentTaskIndex],
-                        ...task
-                    }
-                }
-            }
-            break;
-        case "delete":
-            if(task && storage.tasks){
-                const { id } = task; 
-                const currentTaskIndex = storage.tasks.findIndex(t => t.id===id);
-                if(currentTaskIndex){
-                    const newTasks = storage.tasks.slice(currentTaskIndex, currentTaskIndex+1);
-                    storage.tasks = newTasks;
-                }
-            }
-            break;
-        default:
-            break;
+const useCRUDTasks = (task?: TaskI) => {
+    const { setTasks } = useTasks();
+
+    const create = (task: TaskI) => {
+        setTasks(prev => [...prev, task]);
+        storage.tasks = [...storage.tasks ?? [], task];
+    };
+
+    const update = (task: TaskI) => {
+        console.log("task", task)
+        setTasks(prev =>
+            prev.map(t => (t.id === task.id ? { ...t, ...task } : t))
+        );
+
+        if (storage.tasks) {
+            storage.tasks = storage.tasks.map(t =>
+                t.id === task.id ? { ...t, ...task } : t
+            );
+        }
+    };
+
+    const remove = (taskId: string) => {
+        setTasks(prev => prev.filter(t => t.id !== taskId));
+
+        if (storage.tasks) {
+            storage.tasks = storage.tasks.filter(t => t.id !== taskId);
+        }
+    };
+
+    const allTasks = () => {
+        return (storage.tasks || []);
     }
+
+    return { create, update, remove, allTasks };
 }
 
 export default useCRUDTasks;
