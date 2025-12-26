@@ -1,8 +1,6 @@
 interface UserI {
     id: string;
     name: string;
-    projects: string [];
-    categorys: string [];
     isActive: boolean;
     image?: string;
 }

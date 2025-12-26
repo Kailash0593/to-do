@@ -2,7 +2,7 @@ import { useTasks } from "../contexts/TasksContex";
 import type { TaskI } from "../interface";
 import { storage } from "../storage";
 
-const useCRUDTasks = (task?: TaskI) => {
+const useCRUDTasks = () => {
     const { setTasks } = useTasks();
 
     const create = (task: TaskI) => {

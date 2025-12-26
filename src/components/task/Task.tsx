@@ -1,33 +1,35 @@
 import React, { useRef, useState } from 'react'
 import { useTasks } from '../../core/contexts/TasksContex'
 import type { TaskI } from '../../core/interface';
-import { TaskForm, type TaskFormInputHandle } from './TaskForm';
+import { TaskForm } from './TaskForm';
 import useCRUDTasks from '../../core/hooks/useCRUDTasks';
 import { AppBar, Button, Fab, IconButton, Toolbar, Typography } from '@mui/material';
 import { useProject } from '../../core/contexts/ProjectContext';
 import ArrowBack from '@mui/icons-material/ArrowBackIosNew';
 import NoTaskBgImage from '../../assets/no-task-bg.svg';
-import { SwipeDrawer, type SwipeDrawerCustomInputHandle } from '../SwipeDrawer';
+import { SwipeDrawer, type SwipeDrawerCustomInputHandle } from '../common/SwipeDrawer';
 import { TaskCard } from './TaskCard';
 import AddIcon from '@mui/icons-material/Add';
 import { TaskAddActionMenu, type TaskAddActionMenuCustomInputHandle } from './TaskAddActionMenu';
+import { CategoryForm } from '../category/CategoryForm';
+import { AlertDialog, type AlertDialogCustomInputHandle } from '../common/AlertDialog';
 
 export const Task = () => {
-    const { tasks, setTasks } = useTasks();
+    const { tasks } = useTasks();
     const { project, setProject } = useProject();
-    const [isEditable, setIsEditable] = useState(false);
+    const [task, setTask] = useState<TaskI | undefined>(undefined);
+    const [addFrom, setAddFrom] = useState<"task" | "category">("task");
     const crudTask = useCRUDTasks();
 
     const swipeableDrawerRef = useRef<SwipeDrawerCustomInputHandle>(null);
-    const createTaskRef = useRef<TaskFormInputHandle>(null);
     const taskAddActionMenuRef = useRef<TaskAddActionMenuCustomInputHandle>(null);
+    const commonDialogRef = useRef<AlertDialogCustomInputHandle>(null);
 
     let taskNode: React.ReactNode;
 
-    const onFormSubmit = (task: TaskI) => {
+    const onTaskFormSubmit = (task: TaskI, isEditable: boolean) => {
         isEditable ? crudTask.update(task) : crudTask.create(task);
         swipeableDrawerRef.current?.toggleDrawer(false);
-        createTaskRef.current?.resetFrom();
         console.log("task", task);
     }
 
@@ -37,7 +39,7 @@ export const Task = () => {
 
     const onAddClick = (e: React.MouseEvent<any>) => {
         taskAddActionMenuRef.current?.open((e.currentTarget as SVGElement).parentElement);
-        
+
     }
 
     const onCardClick = (_task: TaskI) => {
@@ -48,20 +50,30 @@ export const Task = () => {
     }
 
     const onDeleteClick = (_task: TaskI) => {
-
+        commonDialogRef.current?.setTitle("Delete Task");
+        commonDialogRef.current?.setDescription(`Are you sure you want to delete ${_task.title} Task ?`);
+        commonDialogRef.current?.confirm().then(() => {
+            crudTask.remove(_task.id);
+        });
+        commonDialogRef.current?.open();
     }
 
     const onEditClick = (_task: TaskI) => {
-
-    }
-
-    const onAddTask = () => {
-        setIsEditable(false);
-        createTaskRef.current?.setTask(undefined);
+        setAddFrom("task");
+        setTask(_task)
         swipeableDrawerRef.current?.toggleDrawer(true);
     }
 
-    const onAddCategory = () => { }
+    const onAddTask = () => {
+        setAddFrom("task");
+        setTask(undefined)
+        swipeableDrawerRef.current?.toggleDrawer(true);
+    }
+
+    const onAddCategory = () => {
+        setAddFrom("category");
+        swipeableDrawerRef.current?.toggleDrawer(true);
+    }
 
     console.log("tasks", tasks)
 
@@ -122,14 +134,25 @@ export const Task = () => {
             <div>
                 {taskNode}
                 <SwipeDrawer ref={swipeableDrawerRef} >
-                    <TaskForm onFormSubmit={onFormSubmit} isEditable={isEditable} ref={createTaskRef} ></TaskForm>
+                    {
+                        addFrom === "task" ?
+                            <TaskForm
+                                onFormSubmit={onTaskFormSubmit}
+                                task={task} ></TaskForm>
+                            :
+                            <CategoryForm></CategoryForm>
+                    }
                 </SwipeDrawer>
-                <TaskAddActionMenu 
+                <TaskAddActionMenu
                     ref={taskAddActionMenuRef}
                     onAddTask={onAddTask}
                     onAddCategory={onAddCategory}
                 ></TaskAddActionMenu>
             </div>
+            <AlertDialog
+                ref={commonDialogRef}
+            ></AlertDialog>
         </>
     )
 }
+

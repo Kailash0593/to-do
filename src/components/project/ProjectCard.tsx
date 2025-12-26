@@ -2,7 +2,6 @@ import { Box, Card, CardActionArea, CardContent, CircularProgress, IconButton, T
 import type { ProjectI } from '../../core/interface'
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { useTasks } from '../../core/contexts/TasksContex';
 import useCRUDTasks from '../../core/hooks/useCRUDTasks';
 
 

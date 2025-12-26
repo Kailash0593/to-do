@@ -8,16 +8,16 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import Typography from '@mui/material/Typography';
 import { useUser } from '../../core/contexts/UserContext';
 import NoProjectBgImage from './../../assets/no-project-bg.svg';
-import { SwipeDrawer, type SwipeDrawerCustomInputHandle } from '../SwipeDrawer';
+import { SwipeDrawer, type SwipeDrawerCustomInputHandle } from '../common/SwipeDrawer';
 import { ProjectCard } from './ProjectCard';
 import AddIcon from '@mui/icons-material/Add';
-import { CommonAlertDialog, type AlertDialogCustomInputHandle } from '../CommonDialog';
+import { AlertDialog, type AlertDialogCustomInputHandle } from '../common/AlertDialog';
 
 export const Project = () => {
     const [ isSelected, setIsSelected ] = useState('');
     const [ isEditable, setIsEditable ] = useState(false);
-    const { user } = useUser();
-    const { projects, setProject } = useProject();
+    const { user, setShowAllUsers } = useUser();
+    const { projects } = useProject();
     const crudProject = useCRUDProject();
     const swipeableDrawerRef = useRef<SwipeDrawerCustomInputHandle>(null);
     const createProjectRef = useRef<ProjectFormInputHandle>(null);
@@ -66,8 +66,8 @@ export const Project = () => {
     const onEditClick = (project: ProjectI) => {
         setIsEditable(true);
         swipeableDrawerRef.current?.toggleDrawer(true);
-        console.log("project", project)
         createProjectRef.current?.setProject(project);
+        console.log("project", project)
         console.log("onEditClick");
     }
 
@@ -121,6 +121,7 @@ export const Project = () => {
                             aria-controls="menu-appbar"
                             aria-haspopup="true"
                             color="inherit"
+                            onClick={() => setShowAllUsers(true)}
                         >
                             <AccountCircle />
                         </IconButton>
@@ -139,9 +140,9 @@ export const Project = () => {
                     </ProjectForm>
                 </SwipeDrawer>
             </div>
-            <CommonAlertDialog
+            <AlertDialog
                 ref={commonDialogRef}
-            ></CommonAlertDialog>
+            ></AlertDialog>
         </>
     )
 }

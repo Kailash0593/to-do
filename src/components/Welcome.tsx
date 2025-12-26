@@ -1,22 +1,23 @@
 import React from 'react';
 import { useUser } from './../core/contexts/UserContext';
-import { CreateUserForm } from './CreateUserForm';
+import { UserForm } from './user/UserForm';
 import type { UserI } from '../core/interface';
-import useCRUDUser from '../core/hooks/useCRUDUser';
 import { Dashboard } from './Dashboard';
 import ToDoBgImage from './../assets/to-do-bg.svg';
+import useCRUDUser from '../core/hooks/useCRUDUser';
 
 export const Welcome = () => {
-    const { user, setUser } = useUser();
+    const { users, setUser } = useUser();
+    const crudUser = useCRUDUser();
 
     let welcome: React.ReactNode;
 
     const onFormSubmit = (user: UserI) => {
-        setUser(user);
-        useCRUDUser("create", user);
+        setUser({...user, isActive: true});
+        crudUser.create({...user, isActive: true});
     }
 
-    if (user) {
+    if (users.length>0) {
         welcome = (
             <Dashboard />
         )
@@ -30,7 +31,7 @@ export const Welcome = () => {
                         you better manage your task
                         project-wise conveniently!</p>
                     <div className='flex align-middle justify-center'>
-                        <CreateUserForm onFormSubmit={onFormSubmit} ></CreateUserForm>
+                        <UserForm onFormSubmit={onFormSubmit} ></UserForm>
                     </div>
                 </div>
             </div>

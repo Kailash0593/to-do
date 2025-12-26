@@ -1,9 +1,9 @@
 import { useForm, type SubmitHandler } from "react-hook-form"
-import type { UserFormFieldsI, UserI } from '../core/interface';
-import { useRandomId } from '../core/hooks/useRandomId';
+import type { UserFormFieldsI, UserI } from '../../core/interface';
+import { useRandomId } from '../../core/hooks/useRandomId';
 import { Button, TextField } from '@mui/material';
 
-export const CreateUserForm = ({ onFormSubmit }: {
+export const UserForm = ({ onFormSubmit }: {
     onFormSubmit: (data: UserI) => void
 }) => {
     const { register, handleSubmit, formState: { errors } } = useForm<UserFormFieldsI>();
@@ -11,10 +11,8 @@ export const CreateUserForm = ({ onFormSubmit }: {
     const onSubmit: SubmitHandler<UserFormFieldsI> = (formData) => {
         const user: UserI = {
             id: useRandomId(),
-            isActive: true,
+            isActive: false,
             name: formData.user.toLocaleLowerCase(),
-            projects: [],
-            categorys: []
         }
         onFormSubmit(user);
     }

@@ -17,7 +17,7 @@ export type AlertDialogCustomInputHandle = {
     confirm: () => Promise<void>
 }
 
-export const CommonAlertDialog = React.forwardRef<AlertDialogCustomInputHandle, Props>((props: Props, ref) => {
+export const AlertDialog = React.forwardRef<AlertDialogCustomInputHandle, Props>((props: Props, ref) => {
     const [open, setOpen] = React.useState(false);
     const [title, setTitle] = React.useState('');
     const [description, setDescription] = React.useState('');

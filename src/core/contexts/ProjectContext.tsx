@@ -18,7 +18,7 @@ const ProjectProvider = ({ children }: { children?: React.ReactNode }) => {
 
     if (user?.id) {
         userProjects = storage.projects?.filter(project => project.userId === user.id) || [];
-        userProject = storage.projects?.find(project => project.isActive && project.userId===user.id);
+        // userProject = storage.projects?.find(project => project.isActive && project.userId===user.id);
     }
 
     const [project, setProject] = useState<ProjectI | undefined>(userProject);

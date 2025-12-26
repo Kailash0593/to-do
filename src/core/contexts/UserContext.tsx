@@ -4,17 +4,27 @@ import type { UserI } from '../interface';
 
 const UserContext = createContext<{
     user: UserI | undefined;
-    setUser: React.Dispatch<React.SetStateAction<UserI | undefined>>
+    setUser: React.Dispatch<React.SetStateAction<UserI | undefined>>,
+    users: UserI [],
+    setUsers: React.Dispatch<React.SetStateAction<UserI []>>,
+    showAllUsers: boolean;
+    setShowAllUsers: React.Dispatch<React.SetStateAction<boolean>>
 } | undefined>(undefined);
 
 
 const UserProvider = ({ children }: { children?: React.ReactNode }) => {
     const currentUser = storage.users?.find(user => user.isActive);
     const [user, setUser] = useState(currentUser);
+    const [users, setUsers] = useState<UserI []>(storage.users || []);
+    const [showAllUsers, setShowAllUsers] = useState(false);
 
     const value = {
         user,
-        setUser
+        setUser,
+        users,
+        setUsers,
+        showAllUsers,
+        setShowAllUsers
     }
 
     return (

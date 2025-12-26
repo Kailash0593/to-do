@@ -3,6 +3,7 @@ import type { TaskI } from '../../core/interface'
 import { TaskCardActionMenu, type TaskCardActionMenuCustomInputHandle } from './TaskCardActionMenu';
 import { useRef } from 'react';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import useCRUDCategory from '../../core/hooks/useCRUDCategory';
 
 interface Props {
     task: TaskI;
@@ -16,6 +17,8 @@ export const TaskCard = (props: Props) => {
     const descriptionLength = 40;
     const description = task.description ? task.description.length > descriptionLength ? `${task.description.substring(0, descriptionLength)}...` : task.description : '';
     const taskCardActionMenuRef = useRef<TaskCardActionMenuCustomInputHandle>(null);
+    const crudCategory = useCRUDCategory();
+    const category = crudCategory.getAllCategorys()?.find(c => c.id === props.task?.categoryId);
 
     const onCardMenuOverflowClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         taskCardActionMenuRef.current?.open(e.currentTarget);
@@ -49,16 +52,31 @@ export const TaskCard = (props: Props) => {
                                             <MoreVertIcon />
                                         </IconButton>
                                     </div>
-                                    <div>
-                                        <Chip
-                                            label={ task.isCompleted ? 'Completed' : 'To do' }
-                                            color={task.isCompleted ? 'success' : 'warning'}
-                                            size='small'
-                                            sx={{
-                                                fontSize: "10px",
-                                                height: "20px"
-                                            }}
-                                        />
+                                    <div className='flex flex-row gap-1'>
+                                        {
+                                            category && <div>
+                                                <Chip
+                                                    label={category.title}
+                                                    color="secondary"
+                                                    size='small'
+                                                    sx={{
+                                                        fontSize: "10px",
+                                                        height: "20px"
+                                                    }}
+                                                />
+                                            </div>
+                                        }
+                                        <div>
+                                            <Chip
+                                                label={task.isCompleted ? 'Completed' : 'To do'}
+                                                color={task.isCompleted ? 'success' : 'warning'}
+                                                size='small'
+                                                sx={{
+                                                    fontSize: "10px",
+                                                    height: "20px"
+                                                }}
+                                            />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -68,6 +86,8 @@ export const TaskCard = (props: Props) => {
             </Card>
             <TaskCardActionMenu
                 ref={taskCardActionMenuRef}
+                onEditClick={() => props.onEditClick(task)}
+                onDeleteClick={() => props.onDeleteClick(task)}
             ></TaskCardActionMenu>
         </>
     )

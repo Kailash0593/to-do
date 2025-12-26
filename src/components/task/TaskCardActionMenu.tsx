@@ -4,7 +4,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
 interface Props {
-
+    onDeleteClick: () => void
+    onEditClick: () => void
 }
 
 export type TaskCardActionMenuCustomInputHandle = {
@@ -33,7 +34,7 @@ export const TaskCardActionMenu = forwardRef<TaskCardActionMenuCustomInputHandle
                 open={open}
                 onClose={handleClose}
                 onClick={handleClose}
-                slotProps={{    
+                slotProps={{
                     paper: {
                         elevation: 0,
                         sx: {
@@ -62,14 +63,22 @@ export const TaskCardActionMenu = forwardRef<TaskCardActionMenuCustomInputHandle
                         },
                     }
                 }}
-                
+
                 transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
             >
-                <MenuItem onClick={handleClose}>
+                <MenuItem onClick={(e) => {
+                    e.stopPropagation();
+                    handleClose();
+                    props.onEditClick()
+                }}>
                     <EditIcon /> Edit
                 </MenuItem>
-                <MenuItem onClick={handleClose}>
+                <MenuItem onClick={(e) => {
+                    e.stopPropagation();
+                    handleClose();
+                    props.onDeleteClick()
+                }}>
                     <DeleteIcon /> Delete
                 </MenuItem>
             </Menu>
